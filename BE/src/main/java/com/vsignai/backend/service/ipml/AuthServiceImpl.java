@@ -16,7 +16,7 @@ public class AuthServiceImpl implements AuthService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
 
-        public String register(String email, String password) {
+        public String register(String email, String password, String name) {
 
             if(userRepository.findByEmail(email).isPresent()) {
                 throw new RuntimeException("Email already exists");
@@ -24,8 +24,10 @@ public class AuthServiceImpl implements AuthService {
 
             User user = User.builder()
                     .email(email)
+                    .name(name)
                     .password(passwordEncoder.encode(password))
-                    .role("USER")
+                    .role(User.Role.USER)
+                    .status(User.UserStatus.ACTIVE)
                     .build();
 
             userRepository.save(user);

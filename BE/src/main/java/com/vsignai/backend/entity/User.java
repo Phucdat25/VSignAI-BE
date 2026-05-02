@@ -25,9 +25,9 @@ public class User {
 
     private String password;
 
-    private String role; // USER, ADMIN
+    private Role role;
 
-    private Boolean isActive = true;
+    private UserStatus status;
 
     private LocalDateTime createdAt;
 
@@ -38,5 +38,12 @@ public class User {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public enum UserStatus {
+        ACTIVE, INACTIVE, BAN
+    }
+    public enum Role {
+        USER, ADMIN
     }
 }
