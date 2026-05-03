@@ -24,9 +24,9 @@ public class User {
     private String name;
 
     private String password;
-
+    @Enumerated(EnumType.STRING)
     private Role role;
-
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     private LocalDateTime createdAt;
