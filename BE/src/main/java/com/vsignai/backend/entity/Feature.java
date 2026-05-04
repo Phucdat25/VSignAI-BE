@@ -3,19 +3,17 @@ package com.vsignai.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "subscription_plans")
+@Table(name = "features")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubscriptionPlan {
+public class Feature {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,17 +22,6 @@ public class SubscriptionPlan {
     private String code;
     private String name;
 
-    private BigDecimal price;
-    private String currency;
-
-    private String intervalUnit;
-    private Integer intervalCount;
-
-    private Boolean isActive;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

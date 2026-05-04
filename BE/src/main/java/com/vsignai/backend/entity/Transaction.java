@@ -1,12 +1,16 @@
 package com.vsignai.backend.entity;
 
+
+import com.vsignai.backend.enums.transaction.TransactionStatus;
+import com.vsignai.backend.enums.transaction.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,20 +22,22 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double amount;
-
-    private String type; // DEPOSIT, PAYMENT
-
-    private String status; // SUCCESS, FAILED
-
-    private LocalDateTime createdAt;
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
+    private String provider;
+    private String transactionCode;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
+
+    @Column(columnDefinition = "json")
+    private String rawResponse;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
