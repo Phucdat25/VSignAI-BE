@@ -26,12 +26,12 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    private String fullName;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;

@@ -1,6 +1,8 @@
 package com.vsignai.backend.service.ipml;
 
 import com.vsignai.backend.entity.User;
+import com.vsignai.backend.enums.user.UserRole;
+import com.vsignai.backend.enums.user.UserStatus;
 import com.vsignai.backend.repository.UserRepository;
 import com.vsignai.backend.service.AuthService;
 import com.vsignai.backend.service.GoogleService;
@@ -28,8 +30,8 @@ public class AuthServiceImpl implements AuthService {
                     .email(email)
                     .name(name)
                     .password(passwordEncoder.encode(password))
-                    .role(User.Role.USER)
-                    .status(User.UserStatus.ACTIVE)
+                    .role(UserRole.CUSTOMER)
+                    .status(UserStatus.ACTIVE)
                     .build();
 
             userRepository.save(user);
@@ -62,8 +64,8 @@ public class AuthServiceImpl implements AuthService {
                             .email(email)
                             .name(name)
                             .password("") // Google user không cần password
-                            .role(User.Role.USER)
-                            .status(User.UserStatus.ACTIVE)
+                            .role(UserRole.CUSTOMER)
+                            .status(UserStatus.ACTIVE)
                             .build();
                     return userRepository.save(newUser);
                 });
