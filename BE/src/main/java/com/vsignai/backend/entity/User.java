@@ -1,9 +1,13 @@
 package com.vsignai.backend.entity;
 
+import com.vsignai.backend.enums.user.UserRole;
+import com.vsignai.backend.enums.user.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,29 +25,22 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String name;
+    @Column(nullable = false)
+    private String passwordHash;
 
-    private String password;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private UserRole role;
+
+    private String fullName;
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserSubscription> subscriptions;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-    //thay cho createAt trong service
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public enum UserStatus {
-        ACTIVE, INACTIVE, BAN
-    }
-    public enum Role {
-        USER, ADMIN
-    }
+    private LocalDateTime deletedAt;
 }

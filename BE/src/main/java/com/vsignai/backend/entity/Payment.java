@@ -1,40 +1,43 @@
 package com.vsignai.backend.entity;
 
+import com.vsignai.backend.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "subscription_plans")
+@Table(name = "payments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubscriptionPlan {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "subscription_id")
+    private UserSubscription subscription;
 
-    private BigDecimal price;
+    private BigDecimal amount;
     private String currency;
 
-    private String intervalUnit;
-    private Integer intervalCount;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
-    private Boolean isActive;
+    private String paymentMethod;
+
+    private LocalDateTime paidAt;
+
+    private LocalDateTime periodStart;
+    private LocalDateTime periodEnd;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }
