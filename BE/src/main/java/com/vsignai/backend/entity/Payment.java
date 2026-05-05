@@ -9,7 +9,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payments")
+@Table(
+        name = "payments",
+        indexes = @Index(name = "idx_payment_subscription", columnList = "subscription_id")
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,16 +24,21 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "subscription_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "subscription_id", nullable = false)
     private UserSubscription subscription;
 
+    @Column(nullable = false)
     private BigDecimal amount;
+
+    @Column(nullable = false)
     private String currency;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus status;
 
+    @Column(nullable = false)
     private String paymentMethod;
 
     private LocalDateTime paidAt;

@@ -22,19 +22,26 @@ public class UserSubscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "plan_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "plan_id", nullable = false)
     private SubscriptionPlan plan;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SubscriptionStatus status;
 
+    @Column(nullable = false)
+    private Boolean isAutoRenew = false;
+
     private LocalDateTime startedAt;
+
+    @Column(nullable = false)
     private LocalDateTime currentPeriodStart;
+
     private LocalDateTime currentPeriodEnd;
 
     private LocalDateTime canceledAt;
