@@ -10,7 +10,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transactions")
+@Table(
+        name = "transactions",
+        indexes = @Index(name = "idx_transaction_payment", columnList = "payment_id")
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,17 +25,22 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
+    @Column(nullable = false)
     private String provider;
+
+    @Column(nullable = false, unique = true)
     private String transactionCode;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType transactionType;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionStatus status;
 
     @Column(columnDefinition = "json")

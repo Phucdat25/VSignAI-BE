@@ -1,5 +1,7 @@
 package com.vsignai.backend.entity;
 
+import com.vsignai.backend.enums.subscription.IntervalUnit;
+import com.vsignai.backend.enums.subscription.PlanCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,16 +23,28 @@ public class SubscriptionPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
+    private PlanCode code;
+
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private BigDecimal price;
+
+    @Column(nullable = false)
     private String currency;
 
-    private String intervalUnit;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private IntervalUnit intervalUnit;
+
+    @Column(nullable = false)
     private Integer intervalCount;
 
-    private Boolean isActive;
+    @Column(nullable = false)
+    private Boolean isActive = false;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
