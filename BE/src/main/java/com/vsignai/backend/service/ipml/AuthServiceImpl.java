@@ -1,5 +1,6 @@
 package com.vsignai.backend.service.ipml;
 
+import com.vsignai.backend.dto.response.AuthResponse;
 import com.vsignai.backend.entity.User;
 import com.vsignai.backend.enums.user.UserRole;
 import com.vsignai.backend.enums.user.UserStatus;
@@ -20,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
         private final JwtService jwtService;
         private final GoogleService googleService;
 
-        public String register(String email, String password, String name) {
+        public AuthResponse register(String email, String password, String name) {
 
             if(userRepository.findByEmail(email).isPresent()) {
                 throw new RuntimeException("Email already exists");
@@ -35,11 +36,17 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
             userRepository.save(user);
+            String token = jwtService.generateToken(user.getEmail());
 
-            return jwtService.generateToken(email);
+            return AuthResponse.builder()
+                    .token(token)
+                    .email(user.getEmail())
+                    .fullName(user.getName())
+                    .role(user.getRole())
+                    .build();
         }
 
-        public String login(String email, String password) {
+        public AuthResponse login(String email, String password) {
 
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -48,10 +55,16 @@ public class AuthServiceImpl implements AuthService {
                 throw new RuntimeException("Wrong password");
             }
 
-            return jwtService.generateToken(email);
+            String token = jwtService.generateToken(user.getEmail());
+            return AuthResponse.builder()
+                    .token(token)
+                    .email(user.getEmail())
+                    .fullName(user.getName())
+                    .role(user.getRole())
+                    .build();
         }
 
-    public String loginWithGoogle(String idToken) {
+    public AuthResponse loginWithGoogle(String idToken) {
 
         var payload = googleService.verifyToken(idToken);
 
@@ -70,7 +83,15 @@ public class AuthServiceImpl implements AuthService {
                     return userRepository.save(newUser);
                 });
 
-        return jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail());
+
+        return AuthResponse.builder()
+                .token(token)
+                .email(user.getEmail())
+                .fullName(user.getName())
+                .role(user.getRole())
+                .build();
     }
+
 }
 
