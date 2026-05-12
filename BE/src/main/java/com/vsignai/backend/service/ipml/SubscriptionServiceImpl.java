@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-    private final UserRepository userRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
 
     public UserSubscription getActiveSubscription(User user) {
