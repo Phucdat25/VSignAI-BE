@@ -17,6 +17,7 @@ public class SignVideoServiceImpl implements SignVideoService {
     private final CloudinaryServiceImpl cloudinaryService;
     private final SignVideoRepository repository;
 
+
     @Override
     public SignVideo upload(String keyword, MultipartFile file) {
 
@@ -42,10 +43,12 @@ public class SignVideoServiceImpl implements SignVideoService {
     @Override
     public SignVideoResponse getByKeyword(String keyword) {
 
-        keyword = keyword.trim().toLowerCase();
+        keyword = keyword
+                .trim()
+                .replaceAll("[.!?;,]+$", "");
 
         SignVideo video = repository
-                .findByKeyword(keyword)
+                .findByKeywordIgnoreCase(keyword)
                 .orElseThrow();
 
         String thumbnailUrl =
