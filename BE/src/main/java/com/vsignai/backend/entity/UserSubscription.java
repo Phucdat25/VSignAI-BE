@@ -51,4 +51,7 @@ public class UserSubscription {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private Boolean cancelAtPeriodEnd = false;
 }

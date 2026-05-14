@@ -1,8 +1,10 @@
 package com.vsignai.backend.service.ipml;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.vsignai.backend.exception.AppException;
 import com.vsignai.backend.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +30,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             );
 
         } catch (IOException e) {
-            throw new RuntimeException("Upload failed");
+            throw new AppException(HttpStatus.BAD_REQUEST, "Upload thất bại");
         }
     }
 

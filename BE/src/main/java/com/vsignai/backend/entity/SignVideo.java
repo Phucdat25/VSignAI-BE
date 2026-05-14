@@ -25,4 +25,7 @@ public class SignVideo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String videoUrl;
 
+    @Column(nullable = false)
+    private Integer durationSeconds;
+
 }
