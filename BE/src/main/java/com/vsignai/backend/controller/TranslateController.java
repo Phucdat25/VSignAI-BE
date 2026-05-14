@@ -29,10 +29,7 @@ public class TranslateController {
             @RequestBody TranslateRequest request
     ) {
 
-        User user =
-                userService.findByEmail(
-                        authentication.getName()
-                );
+        User user = (User) authentication.getPrincipal();
 
         UserSubscription subscription =
                 subscriptionService
@@ -56,10 +53,7 @@ public class TranslateController {
             @RequestBody RecognitionRequest request
     ) {
 
-        User user =
-                userService.findByEmail(
-                        authentication.getName()
-                );
+        User user = (User) authentication.getPrincipal();
 
         UserSubscription subscription =
                 subscriptionService

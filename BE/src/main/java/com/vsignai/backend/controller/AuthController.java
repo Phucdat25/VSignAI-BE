@@ -5,6 +5,7 @@ import com.vsignai.backend.dto.LoginRequest;
 import com.vsignai.backend.dto.RegisterRequest;
 import com.vsignai.backend.entity.User;
 import com.vsignai.backend.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request.getEmail(), request.getPassword(), request.getName());
     }
 
