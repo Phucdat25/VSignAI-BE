@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
         private final UserSubscriptionRepository userSubscriptionRepository;
         private final SubscriptionPlanRepository subscriptionPlanRepository;
 
+        @Transactional
         @Override
         public AuthResponse register(String email, String password, String name) {
 
@@ -82,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
+        @Transactional
         @Override
     public AuthResponse loginWithGoogle(String idToken) {
 
@@ -151,6 +154,7 @@ public class AuthServiceImpl implements AuthService {
                         .plan(freePlan)
                         .status(SubscriptionStatus.ACTIVE)
                         .isAutoRenew(false)
+                        .cancelAtPeriodEnd(false)
                         .startedAt(LocalDateTime.now())
                         .currentPeriodStart(LocalDateTime.now())
                         .currentPeriodEnd(null)
