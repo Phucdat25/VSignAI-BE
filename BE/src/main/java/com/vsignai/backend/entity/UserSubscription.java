@@ -34,6 +34,7 @@ public class UserSubscription {
     @Column(nullable = false)
     private SubscriptionStatus status;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isAutoRenew = false;
 
@@ -52,6 +53,7 @@ public class UserSubscription {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean cancelAtPeriodEnd = false;
 }
