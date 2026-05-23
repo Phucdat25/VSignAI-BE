@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
     private final UserSubscriptionRepository userSubscriptionRepository;
     private final PaymentRepository paymentRepository;
     private final UsageLogRepository usageLogRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //Tính tổng user, user premiun, user họt động theo ngày
     @Override
@@ -336,5 +338,25 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
                         .premiumUsers(premiumMap.getOrDefault(month, 0L))
                         .build())
                 .toList();
+    }
+
+    @Override
+    public AdminUserResponse createUser(AdminCreateUserRequest request) {
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "EMAIL_ALREADY_EXISTS");
+        }
+
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .status(request.getStatus() != null ? request.getStatus() : UserStatus.ACTIVE)
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        return mapToAdminUserResponse(savedUser);
     }
 }

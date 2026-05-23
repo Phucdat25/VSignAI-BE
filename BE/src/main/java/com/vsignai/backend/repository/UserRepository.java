@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findByDeletedAtIsNull(Pageable pageable);
 
+    boolean existsByEmail(String email);
+
     //đếm người dùng hàng tháng
     @Query("""
     SELECT MONTH(u.createdAt), COUNT(u)

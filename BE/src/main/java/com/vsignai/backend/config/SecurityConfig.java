@@ -29,7 +29,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/error").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/auth/**",
+                                "/error",
+                                "/api/health",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 // QUAN TRỌNG: Thêm dòng này

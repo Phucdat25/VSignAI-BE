@@ -85,4 +85,14 @@ public class AdminUserController {
         return ApiResponse.success(adminDashboardService.getMonthlyUserGrowth(year)
         );
     }
+
+    @PostMapping
+    public ApiResponse<AdminUserResponse> createUser(
+            @RequestBody AdminCreateUserRequest request
+    ) {
+        return ApiResponse.success(
+                "Create user successfully",
+                adminDashboardService.createUser(request)
+        );
+    }
 }
