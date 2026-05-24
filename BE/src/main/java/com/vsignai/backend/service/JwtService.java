@@ -26,11 +26,32 @@ public class JwtService {
     }
 
     public String extractEmail(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    // 🔥 FIX CHÍNH
+    public boolean isValidToken(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // 🔽 THÊM MỚI
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractAllClaims(token).getExpiration();
+    }
+
+    private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 }
