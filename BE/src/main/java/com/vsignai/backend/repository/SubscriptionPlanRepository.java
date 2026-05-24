@@ -5,13 +5,10 @@ import com.vsignai.backend.enums.subscription.PlanCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-import java.util.List;
 
 public interface SubscriptionPlanRepository extends JpaRepository<SubscriptionPlan, Long> {
 
-    Optional<SubscriptionPlan> findByCode(PlanCode code);
+        Optional<SubscriptionPlan> findByCode(PlanCode code);
 
-    boolean existsByCode(PlanCode code);
-
-    List<SubscriptionPlan> findByIsActiveTrue();
+        boolean existsByCode(PlanCode code);
 }

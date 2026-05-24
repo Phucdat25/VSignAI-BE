@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/payments")
+@RequestMapping("/api/payments")
 @RequiredArgsConstructor
 public class PaymentVNPayController {
 

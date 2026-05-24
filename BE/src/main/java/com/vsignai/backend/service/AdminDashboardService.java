@@ -30,4 +30,5 @@ public interface AdminDashboardService {
 
     public List<WeeklyActivityResponse> getWeeklyActivity();
     public List<MonthlyUserGrowthResponse> getMonthlyUserGrowth(Integer year);
+    AdminUserResponse createUser(AdminCreateUserRequest request);
 }

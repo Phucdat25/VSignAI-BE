@@ -13,9 +13,9 @@ public interface SignVideoRepository
     Optional<SignVideo> findByKeyword(String keyword);
     @Query("""
     SELECT s
-    FROM SignVideo s 
+    FROM SignVideo s
     WHERE LOWER(s.keyword) = LOWER(:keyword)
- """)
+""")
     Optional<SignVideo> findByKeywordIgnoreCase(
             @Param("keyword") String keyword
     );

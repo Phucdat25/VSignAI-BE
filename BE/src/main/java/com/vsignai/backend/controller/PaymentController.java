@@ -18,7 +18,7 @@ import com.vsignai.backend.security.UserPrincipal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PaymentController {
 

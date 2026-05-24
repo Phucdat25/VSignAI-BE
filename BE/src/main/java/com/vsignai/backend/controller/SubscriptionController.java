@@ -15,7 +15,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/me/subscriptions")
+@RequestMapping("/api/users/me/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
