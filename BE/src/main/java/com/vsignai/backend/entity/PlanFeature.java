@@ -40,4 +40,6 @@ public class PlanFeature {
 
     @Column(nullable = false)
     private Boolean isEnabled = false;
+
+    private String configJson;
 }

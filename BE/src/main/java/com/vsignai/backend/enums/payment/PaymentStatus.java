@@ -1,9 +1,11 @@
-package com.vsignai.backend.enums;
+package com.vsignai.backend.enums.payment;
 
 public enum PaymentStatus {
     PENDING,
     PROCESSING,
     SUCCESS,
     FAILED,
-    REFUNDED
+    REFUNDED,
+    CANCELED,
+    EXPIRED
 }

@@ -10,13 +10,23 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_subscriptions")
+@Table(
+        name = "user_subscriptions",
+        indexes = {
+                @Index(name = "idx_subscription_user", columnList = "user_id"),
+                @Index(name = "idx_subscription_status", columnList = "status"),
+                @Index(name = "idx_subscription_end", columnList = "current_period_end")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserSubscription {
+
+    @Version
+    private Long version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +53,7 @@ public class UserSubscription {
     @Column(nullable = false)
     private LocalDateTime currentPeriodStart;
 
+    @Column(nullable = false)
     private LocalDateTime currentPeriodEnd;
 
     private LocalDateTime canceledAt;
