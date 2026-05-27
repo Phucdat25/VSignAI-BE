@@ -37,6 +37,8 @@ public class PaymentController {
     public String vnpayIpn(
             @RequestParam Map<String, String> params
     ) {
+        System.out.println("========== VNPAY IPN ==========");
+        System.out.println(params);
 
         // =====================================================
         // STEP 1 — VALIDATE SIGNATURE
