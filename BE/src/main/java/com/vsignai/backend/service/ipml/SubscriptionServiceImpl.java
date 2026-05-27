@@ -231,9 +231,44 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         UserSubscription subscription =
                 payment.getSubscription();
 
+        // =====================================================
+        // CREATE SUBSCRIPTION IF NULL
+        // =====================================================
+
+        if (subscription == null) {
+
+            SubscriptionPlan plan =
+                    planRepository.findByCode(
+                            PlanCode.valueOf(payment.getPlanCode())
+                    ).orElseThrow(() ->
+                            new NotFoundException("Plan not found")
+                    );
+
+            subscription = UserSubscription.builder()
+                    .user(payment.getUser())
+                    .plan(plan)
+                    .status(SubscriptionStatus.PENDING)
+                    .isAutoRenew(false)
+                    .build();
+
+            subscriptionRepository.save(subscription);
+
+            payment.setSubscription(subscription);
+
+            paymentRepository.save(payment);
+        }
+
+        // =====================================================
+        // ALREADY ACTIVE
+        // =====================================================
+
         if (subscription.getStatus() == SubscriptionStatus.ACTIVE) {
             return;
         }
+
+        // =====================================================
+        // ACTIVATE
+        // =====================================================
 
         LocalDateTime now = LocalDateTime.now();
 
