@@ -67,6 +67,10 @@ public class VNPayServiceImpl implements VNPayService {
                 vnPayConfig.getReturnUrl()
         );
 
+        params.put(
+                "vnp_IpnUrl",
+                vnPayConfig.getIpnUrl()
+        );
 
         params.put(
                 "vnp_IpAddr",

@@ -42,7 +42,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 // VNPAY
                                 "/api/v1/payments/vnpay-return",
-                                "/api/v1/payments/vnpay-ipn"
+                                "/api/v1/payments/vnpay-ipn",
+                                "/favicon.ico"
                         ).permitAll()
                         .anyRequest().authenticated()
 
