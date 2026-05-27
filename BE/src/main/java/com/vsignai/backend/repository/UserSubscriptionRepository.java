@@ -48,4 +48,16 @@ public interface UserSubscriptionRepository
             Long planId,
             SubscriptionStatus status
     );
+
+    @Query("""
+    SELECT us
+    FROM UserSubscription us
+    WHERE us.user.id = :userId
+      AND us.status = 'ACTIVE'
+      AND us.currentPeriodEnd > CURRENT_TIMESTAMP
+    ORDER BY us.currentPeriodEnd DESC
+""")
+    Optional<UserSubscription> findCurrentActiveSubscription(
+            @Param("userId") Long userId
+    );
 }

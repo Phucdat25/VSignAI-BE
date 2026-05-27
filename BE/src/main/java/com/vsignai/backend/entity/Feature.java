@@ -29,4 +29,6 @@ public class Feature {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    private String description;
 }

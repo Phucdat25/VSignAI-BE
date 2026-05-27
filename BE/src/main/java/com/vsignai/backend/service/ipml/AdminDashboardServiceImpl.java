@@ -3,7 +3,7 @@ package com.vsignai.backend.service.ipml;
 import com.vsignai.backend.dto.response.*;
 import com.vsignai.backend.entity.User;
 import com.vsignai.backend.entity.UserSubscription;
-import com.vsignai.backend.enums.PaymentStatus;
+import com.vsignai.backend.enums.payment.PaymentStatus;
 import com.vsignai.backend.enums.RevenueFilterType;
 import com.vsignai.backend.enums.subscription.PlanCode;
 import com.vsignai.backend.enums.subscription.SubscriptionStatus;
