@@ -74,7 +74,7 @@ public class VNPayServiceImpl implements VNPayService {
         );
 
         Calendar calendar =
-                Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+                Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 
         SimpleDateFormat formatter =
                 new SimpleDateFormat("yyyyMMddHHmmss");
