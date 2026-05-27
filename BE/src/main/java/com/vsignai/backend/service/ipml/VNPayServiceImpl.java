@@ -73,15 +73,14 @@ public class VNPayServiceImpl implements VNPayService {
                 request.getRemoteAddr()
         );
 
-        Calendar calendar =
-                Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+        TimeZone vnTimeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
-        SimpleDateFormat formatter =
-                new SimpleDateFormat("yyyyMMddHHmmss");
+        Calendar calendar = Calendar.getInstance(vnTimeZone);
 
-        String createDate =
-                formatter.format(calendar.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(vnTimeZone);
 
+        String createDate = formatter.format(calendar.getTime());
         params.put("vnp_CreateDate", createDate);
 
         calendar.add(Calendar.MINUTE, 15);
