@@ -35,7 +35,34 @@ public class PaymentController {
     private final PaymentService  paymentService;
 
     @GetMapping("/vnpay-return")
-    public String vnpayReturn() {
+    @Transactional
+    public String vnpayReturn(
+            @RequestParam Map<String, String> params
+    ) {
+        boolean validSignature = vnPayService.validateSignature(params);
+
+        if (!validSignature) {
+            return "Invalid signature";
+        }
+
+        String transactionId = params.get("vnp_TxnRef");
+
+        Payment payment = paymentRepository
+                .findByTransactionId(transactionId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        String responseCode = params.get("vnp_ResponseCode");
+
+        if ("00".equals(responseCode)) {
+            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setPaidAt(LocalDateTime.now());
+            payment.setGatewayTransactionId(params.get("vnp_TransactionNo"));
+            payment.setGatewayResponseCode(responseCode);
+
+            paymentRepository.save(payment);
+
+            subscriptionService.activateSubscription(payment);
+        }
 
         return "VNPay payment completed";
     }
