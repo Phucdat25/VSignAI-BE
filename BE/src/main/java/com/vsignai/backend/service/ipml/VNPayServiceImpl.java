@@ -87,7 +87,7 @@ public class VNPayServiceImpl implements VNPayService {
         String createDate = formatter.format(calendar.getTime());
         params.put("vnp_CreateDate", createDate);
 
-        calendar.add(Calendar.MINUTE, 15);
+        calendar.add(Calendar.MINUTE, 50);
 
         String expireDate =
                 formatter.format(calendar.getTime());
