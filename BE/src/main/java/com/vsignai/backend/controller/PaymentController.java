@@ -40,7 +40,10 @@ public class PaymentController {
         return "VNPay payment completed";
     }
 
-    @GetMapping("/vnpay-ipn")
+    @RequestMapping(
+            value = "/vnpay-ipn",
+            method = {RequestMethod.GET, RequestMethod.POST}
+    )
     @Transactional
     public String vnpayIpn(
             @RequestParam Map<String, String> params
