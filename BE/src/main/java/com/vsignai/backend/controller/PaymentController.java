@@ -1,11 +1,17 @@
 package com.vsignai.backend.controller;
 
+import com.vsignai.backend.dto.PaymentInitRequest;
+import com.vsignai.backend.dto.response.PaymentInitResponse;
 import com.vsignai.backend.entity.Payment;
 import com.vsignai.backend.enums.payment.PaymentStatus;
 import com.vsignai.backend.repository.PaymentRepository;
+import com.vsignai.backend.service.PaymentService;
 import com.vsignai.backend.service.SubscriptionService;
 import com.vsignai.backend.service.VNPayService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tools.jackson.databind.ObjectMapper;
@@ -25,6 +31,8 @@ public class PaymentController {
     private final SubscriptionService subscriptionService;
 
     private final ObjectMapper objectMapper;
+
+    private final PaymentService  paymentService;
 
     @GetMapping("/vnpay-return")
     public String vnpayReturn() {
@@ -122,6 +130,21 @@ public class PaymentController {
         // =====================================================
 
         return "{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}";
+    }
+
+    @PostMapping("/initiate")
+    public ResponseEntity<PaymentInitResponse> initiatePayment(
+            @RequestBody PaymentInitRequest request,
+            Authentication authentication,
+            HttpServletRequest httpRequest
+    ) {
+        PaymentInitResponse response = paymentService.initiatePayment(
+                request,
+                authentication,
+                httpRequest
+        );
+
+        return ResponseEntity.ok(response);
     }
 
 

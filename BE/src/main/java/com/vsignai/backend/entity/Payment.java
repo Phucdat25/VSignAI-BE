@@ -61,8 +61,8 @@ public class Payment {
     @Column(name = "gateway_transaction_id")
     private String gatewayTransactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "subscription_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_id")
     private UserSubscription subscription;
 
     @Column(nullable = false)
@@ -119,4 +119,12 @@ public class Payment {
 
     @Column(columnDefinition = "json")
     private String gatewayPayload;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private SubscriptionPlan plan;
 }
