@@ -126,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserSubscription subscription =
                 userSubscriptionRepository
-                        .findByUserAndStatus(
+                        .findTopByUserAndStatusOrderByCurrentPeriodEndDesc(
                                 user,
                                 SubscriptionStatus.ACTIVE
                         )
