@@ -39,6 +39,8 @@ public class PaymentController {
     public String vnpayReturn(
             @RequestParam Map<String, String> params
     ) {
+        System.out.println("========== VNPAY RETURN ==========");
+        System.out.println(params);
         boolean validSignature = vnPayService.validateSignature(params);
 
         if (!validSignature) {
@@ -75,8 +77,7 @@ public class PaymentController {
     public String vnpayIpn(
             @RequestParam Map<String, String> params
     ) {
-        System.out.println("========== VNPAY IPN ==========");
-        System.out.println(params);
+
 
 
         // =====================================================
