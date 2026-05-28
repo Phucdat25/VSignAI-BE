@@ -60,4 +60,12 @@ public interface UserSubscriptionRepository
     Optional<UserSubscription> findCurrentActiveSubscription(
             @Param("userId") Long userId
     );
+    Optional<UserSubscription> findTopByUserAndStatusOrderByCurrentPeriodEndDesc(
+            User user,
+            SubscriptionStatus status
+    );
+    List<UserSubscription> findAllByUserAndStatus(
+            User user,
+            SubscriptionStatus status
+    );
 }

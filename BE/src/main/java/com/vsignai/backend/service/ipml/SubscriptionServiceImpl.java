@@ -228,69 +228,130 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     public void activateSubscription(Payment payment) {
 
-        UserSubscription subscription =
-                payment.getSubscription();
-
-        // =====================================================
-        // CREATE SUBSCRIPTION IF NULL
-        // =====================================================
-
-        if (subscription == null) {
-
-            SubscriptionPlan plan =
-                    planRepository.findByCode(
-                            PlanCode.valueOf(payment.getPlanCode())
-                    ).orElseThrow(() ->
-                            new NotFoundException("Plan not found")
-                    );
-
-            subscription = UserSubscription.builder()
-                    .user(payment.getUser())
-                    .plan(plan)
-                    .status(SubscriptionStatus.PENDING)
-                    .isAutoRenew(false)
-                    .build();
-
-            subscriptionRepository.save(subscription);
-
-            payment.setSubscription(subscription);
-
-            paymentRepository.save(payment);
-        }
-
-        // =====================================================
-        // ALREADY ACTIVE
-        // =====================================================
-
-        if (subscription.getStatus() == SubscriptionStatus.ACTIVE) {
+        if (payment.getStatus() == PaymentStatus.SUCCESS
+                && payment.getSubscription() != null
+                && payment.getSubscription().getStatus() == SubscriptionStatus.ACTIVE) {
             return;
         }
 
-        // =====================================================
-        // ACTIVATE
-        // =====================================================
+        User user = payment.getUser();
 
-        LocalDateTime now = LocalDateTime.now();
+        // 1. Expire tất cả subscription ACTIVE cũ của user
+        List<UserSubscription> activeSubscriptions =
+                subscriptionRepository.findAllByUserAndStatus(
+                        user,
+                        SubscriptionStatus.ACTIVE
+                );
 
-        subscription.setStatus(SubscriptionStatus.ACTIVE);
-
-        subscription.setStartedAt(now);
-
-        subscription.setCurrentPeriodStart(now);
-
-        if ("MONTH".equals(payment.getBillingUnit())) {
-
-            subscription.setCurrentPeriodEnd(
-                    now.plusMonths(payment.getBillingInterval())
-            );
-
-        } else if ("YEAR".equals(payment.getBillingUnit())) {
-
-            subscription.setCurrentPeriodEnd(
-                    now.plusYears(payment.getBillingInterval())
-            );
+        for (UserSubscription active : activeSubscriptions) {
+            active.setStatus(SubscriptionStatus.EXPIRED);
+            active.setCanceledAt(LocalDateTime.now());
+            subscriptionRepository.save(active);
         }
 
-        subscriptionRepository.save(subscription);
+        // 2. Lấy plan từ payment
+        SubscriptionPlan plan =
+                planRepository.findByCode(
+                        PlanCode.valueOf(payment.getPlanCode())
+                ).orElseThrow(() ->
+                        new NotFoundException("Plan not found")
+                );
+
+        // 3. Tạo subscription mới
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime periodEnd;
+
+        if ("MONTH".equals(payment.getBillingUnit())) {
+            periodEnd = now.plusMonths(payment.getBillingInterval());
+        } else if ("YEAR".equals(payment.getBillingUnit())) {
+            periodEnd = now.plusYears(payment.getBillingInterval());
+        } else {
+            throw new BusinessException("Invalid billing unit");
+        }
+
+        UserSubscription subscription = UserSubscription.builder()
+                .user(user)
+                .plan(plan)
+                .status(SubscriptionStatus.ACTIVE)
+                .isAutoRenew(false)
+                .startedAt(now)
+                .currentPeriodStart(now)
+                .currentPeriodEnd(periodEnd)
+                .build();
+
+        UserSubscription savedSubscription =
+                subscriptionRepository.save(subscription);
+
+        // 4. Gắn subscription mới vào payment
+        payment.setSubscription(savedSubscription);
+        paymentRepository.save(payment);
     }
 }
+//    public void activateSubscription(Payment payment) {
+//
+//        UserSubscription subscription =
+//                payment.getSubscription();
+//
+//        // =====================================================
+//        // CREATE SUBSCRIPTION IF NULL
+//        // =====================================================
+//
+//        if (subscription == null) {
+//
+//            SubscriptionPlan plan =
+//                    planRepository.findByCode(
+//                            PlanCode.valueOf(payment.getPlanCode())
+//                    ).orElseThrow(() ->
+//                            new NotFoundException("Plan not found")
+//                    );
+//
+//            subscription = UserSubscription.builder()
+//                    .user(payment.getUser())
+//                    .plan(plan)
+//                    .status(SubscriptionStatus.PENDING)
+//                    .isAutoRenew(false)
+//                    .build();
+//
+//            subscriptionRepository.save(subscription);
+//
+//            payment.setSubscription(subscription);
+//
+//            paymentRepository.save(payment);
+//        }
+//
+//        // =====================================================
+//        // ALREADY ACTIVE
+//        // =====================================================
+//
+//        if (subscription.getStatus() == SubscriptionStatus.ACTIVE) {
+//            return;
+//        }
+//
+//        // =====================================================
+//        // ACTIVATE
+//        // =====================================================
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        subscription.setStatus(SubscriptionStatus.ACTIVE);
+//
+//        subscription.setStartedAt(now);
+//
+//        subscription.setCurrentPeriodStart(now);
+//
+//        if ("MONTH".equals(payment.getBillingUnit())) {
+//
+//            subscription.setCurrentPeriodEnd(
+//                    now.plusMonths(payment.getBillingInterval())
+//            );
+//
+//        } else if ("YEAR".equals(payment.getBillingUnit())) {
+//
+//            subscription.setCurrentPeriodEnd(
+//                    now.plusYears(payment.getBillingInterval())
+//            );
+//        }
+//
+//        subscriptionRepository.save(subscription);
+//    }
