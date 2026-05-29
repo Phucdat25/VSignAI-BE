@@ -188,6 +188,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         Payment payment =
                 Payment.builder()
+                        .user(user)
                         .subscription(subscription)
                         .transactionId(UUID.randomUUID().toString())
                         .idempotencyKey(idempotencyKey)
