@@ -90,12 +90,12 @@ public class UsageServiceImpl implements UsageService {
                         LocalDate.now()
                 );
         UserSubscription subscription =
-                subscriptionRepository
-                        .findByUserAndStatus(
-                                user,
-                                SubscriptionStatus.ACTIVE
-                        )
-                        .orElse(null);
+        subscriptionRepository
+                .findTopByUserAndStatusOrderByCurrentPeriodEndDesc(
+                        user,
+                        SubscriptionStatus.ACTIVE
+                )
+                .orElse(null);
 
         PlanCode planCode = PlanCode.FREE;
 
