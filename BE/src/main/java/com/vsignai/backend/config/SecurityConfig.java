@@ -45,6 +45,9 @@ public class SecurityConfig {
                                 "/api/v1/payments/vnpay-ipn",
                                 "/favicon.ico"
                         ).permitAll()
+
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
                         .anyRequest().authenticated()
 
                 )

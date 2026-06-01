@@ -1,15 +1,19 @@
 package com.vsignai.backend.service.ipml;
 
+import com.vsignai.backend.dto.CreateTranslationSessionRequest;
 import com.vsignai.backend.dto.response.SignVideoResponse;
 import com.vsignai.backend.entity.SignVideo;
 import com.vsignai.backend.entity.User;
 import com.vsignai.backend.entity.UserSubscription;
 import com.vsignai.backend.enums.feature.FeatureCode;
 import com.vsignai.backend.enums.subscription.SubscriptionStatus;
+import com.vsignai.backend.enums.translation.TranslationStatus;
+import com.vsignai.backend.enums.translation.TranslationType;
 import com.vsignai.backend.exception.AppException;
 import com.vsignai.backend.repository.SignVideoRepository;
 import com.vsignai.backend.repository.UserSubscriptionRepository;
 import com.vsignai.backend.service.SignVideoService;
+import com.vsignai.backend.service.TranslationSessionService;
 import com.vsignai.backend.service.UsageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,8 @@ public class SignVideoServiceImpl implements SignVideoService {
     private final SignVideoRepository repository;
     private final UsageService usageService;
     private final UserSubscriptionRepository subscriptionRepository;
+
+    private final TranslationSessionService translationSessionService;
 
     @Override
     public SignVideo upload(String keyword, MultipartFile file) {
@@ -79,6 +85,31 @@ public class SignVideoServiceImpl implements SignVideoService {
                 FeatureCode.TRANSLATION,
                 video.getDurationSeconds()
         );
+        translationSessionService.createSession(
+                CreateTranslationSessionRequest
+                        .builder()
+                        .user(user)
+                        .translationType(
+                                TranslationType.SPEECH_TO_SIGN
+                        )
+                        .status(
+                                TranslationStatus.SUCCESS
+                        )
+                        .inputContent(
+                                video.getKeyword()
+                        )
+                        .outputContent(
+                                video.getKeyword()
+                        )
+                        .resultUrl(
+                                video.getVideoUrl()
+                        )
+                        .aiVersion(
+                                "speech-sign-v1"
+                        )
+                        .build()
+        );
+
         String thumbnailUrl =
                 "https://res.cloudinary.com/dinw9zchn/video/upload/so_1/"
                         + video.getPublicId()
