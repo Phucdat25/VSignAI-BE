@@ -26,4 +26,6 @@ public interface TranslationSessionRepository
             LocalDateTime end
     );
 
+    Page<TranslationSession> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
 }

@@ -26,4 +26,6 @@ public class TranslationHistoryResponse {
     private String resultUrl;
 
     private LocalDateTime createdAt;
+
+    private Long userId;
 }

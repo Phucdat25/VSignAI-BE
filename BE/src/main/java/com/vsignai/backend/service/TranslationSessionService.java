@@ -27,4 +27,9 @@ public interface TranslationSessionService {
             Long sessionId,
             User user
     );
+
+    PaginationResponseDTO<List<TranslationHistoryResponse>> getAllHistoryForAdmin(
+            int page,
+            int size
+    );
 }

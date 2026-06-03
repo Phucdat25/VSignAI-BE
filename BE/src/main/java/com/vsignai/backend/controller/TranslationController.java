@@ -11,6 +11,7 @@ import com.vsignai.backend.service.TranslationSessionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,6 +103,21 @@ public class TranslationController {
         return ResponseEntity.ok(
                 ApiResponse.successMessage(
                         "Gửi feedback thành công"
+                )
+        );
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<PaginationResponseDTO<List<TranslationHistoryResponse>>>>
+    getAllHistoryForAdmin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Lấy toàn bộ lịch sử dịch thành công",
+                        translationSessionService.getAllHistoryForAdmin(page, size)
                 )
         );
     }

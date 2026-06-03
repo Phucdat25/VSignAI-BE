@@ -170,4 +170,42 @@ public class TranslationSessionServiceImpl
                 .createdAt(session.getCreatedAt())
                 .build();
     }
+
+    @Override
+    public PaginationResponseDTO<List<TranslationHistoryResponse>> getAllHistoryForAdmin(
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<TranslationSession> sessionPage =
+                repository.findAllByOrderByCreatedAtDesc(pageable);
+
+        List<TranslationHistoryResponse> data =
+                sessionPage.getContent()
+                        .stream()
+                        .map(session ->
+                                TranslationHistoryResponse.builder()
+                                        .id(session.getId())
+                                        .translationType(session.getTranslationType())
+                                        .status(session.getStatus())
+                                        .inputContent(session.getInputContent())
+                                        .outputContent(session.getOutputContent())
+                                        .sourceUrl(session.getSourceUrl())
+                                        .resultUrl(session.getResultUrl())
+                                        .createdAt(session.getCreatedAt())
+                                        .userId(session.getUser().getId())
+                                        .build()
+                        )
+                        .toList();
+
+        return PaginationResponseDTO
+                .<List<TranslationHistoryResponse>>builder()
+                .totalItems(sessionPage.getTotalElements())
+                .totalPages(sessionPage.getTotalPages())
+                .currentPage(sessionPage.getNumber())
+                .pageSize(sessionPage.getSize())
+                .data(data)
+                .build();
+    }
 }
