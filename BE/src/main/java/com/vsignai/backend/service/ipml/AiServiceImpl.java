@@ -58,10 +58,25 @@ public class AiServiceImpl implements AiService {
                 .findTopByUserAndStatusOrderByCurrentPeriodEndDesc(user, SubscriptionStatus.ACTIVE)
                 .orElse(null);
 
-        AiPredictResponse response = callAiService(file,user);
+        AiPredictResponse response = callAiService(file, user);
 
-        long processingTime =
-                System.currentTimeMillis() - start;
+        if (response == null) {
+            throw new AppException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "AI service không trả kết quả"
+            );
+        }
+
+        if (!"success".equalsIgnoreCase(response.getStatus())) {
+            throw new AppException(
+                    HttpStatus.BAD_REQUEST,
+                    response.getMessage() != null
+                            ? response.getMessage()
+                            : "AI không nhận diện được ký hiệu"
+            );
+        }
+
+        long processingTime = System.currentTimeMillis() - start;
 
         usageService.checkAndSaveUsage(
                 user,
@@ -84,7 +99,7 @@ public class AiServiceImpl implements AiService {
                                 file.getOriginalFilename()
                         )
                         .outputContent(
-                                response.getFinalSentence()
+                                response.getPredictedGloss()
                         )
                         .processingTimeMs(
                                 processingTime
@@ -110,8 +125,8 @@ public class AiServiceImpl implements AiService {
                     file.getOriginalFilename()
             ));
 
-            body.add("stride", "15");
-            body.add("confidence_threshold", "70.0");
+//            body.add("stride", "15");
+//            body.add("confidence_threshold", "70.0");
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity =
                     new HttpEntity<>(body, headers);

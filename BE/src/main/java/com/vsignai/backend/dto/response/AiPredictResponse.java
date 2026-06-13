@@ -3,18 +3,21 @@ package com.vsignai.backend.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class AiPredictResponse {
 
     private String status;
 
-    @JsonProperty("total_frames")
-    private Integer totalFrames;
+    @JsonProperty("predicted_gloss")
+    private String predictedGloss;
 
-    private List<AiWindowResponse> windows;
+    private Double confidence;
 
-    @JsonProperty("final_sentence")
-    private String finalSentence;
+    @JsonProperty("total_processed_frames")
+    private Integer totalProcessedFrames;
+
+    @JsonProperty("total_windows_checked")
+    private Integer totalWindowsChecked;
+
+    private String message;
 }
